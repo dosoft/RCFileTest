@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ "x$HIVE_HOME" == "x" ]; then
+  export HIVE_HOME="/usr/local/hive-0.11.0-shark-0.9.1-bin"
+fi
+
+if [ "x$HADOOP_HOME" == "x" ]; then
+  export HADOOP_HOME="/usr/local/hadoop-1.0.3"
+fi
+
+# Add Hive jars.
+for jar in `find $HIVE_HOME/lib -name '*jar'`; do
+    EXTRA_CLASSPATH+=:$jar
+done
+
+#for jar in `find $HADOOP_HOME/lib -name '*jar'`; do
+#    EXTRA_CLASSPATH+=:$jar
+#done
+for jar in `find $HADOOP_HOME -name '*jar'`; do
+    EXTRA_CLASSPATH+=:$jar
+done
+
+
+export EXTRA_CLASSPATH
+export CLASSPATH+=$EXTRA_CLASSPATH 
+
+if [ -n "$JAVA_HOME" ]; then
+  RUNNER="${JAVA_HOME}/bin/java"
+else
+  RUNNER=java
+fi
+
+echo $CLASSPATH
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HADOOP_HOME/lib/native
+
+exec $RUNNER -cp target/RCFileTest-1.jar:$CLASSPATH test.hive.rcfile.RCFileTest "$@"
