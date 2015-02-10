@@ -1,6 +1,6 @@
 # RCFileTest
 
-Here is an example how to create RCFile using hive api.
+Here is an example how to create RCFile using LazyBinaryColumnarSerDe which is a default SerDe in hive 0.12 and above.
 
 ## Steps to build:
 
